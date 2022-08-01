@@ -8,6 +8,6 @@ const iframe = document.querySelector('iframe');
     player.on('timeupdate',Throttle( playTime,1000) );
 
     function playTime({seconds}){   
-    localStorage.setItem("timeupdate",seconds);
+    localStorage.setItem("timeupdate",JSON.stringify(seconds));
 };
-    player.setCurrentTime(localStorage.getItem('timeupdate'));
+    player.setCurrentTime(JSON.parse(localStorage.getItem('timeupdate')));

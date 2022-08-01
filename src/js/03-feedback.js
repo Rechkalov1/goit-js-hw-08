@@ -25,8 +25,7 @@ function onFormSubmit(e) {
   localStorage.removeItem(STORAGE_KEY);
 }
 function onFormInput(e) {
-  let savedInputs = localStorage.getItem(STORAGE_KEY);
-  savedInputs = savedInputs ? JSON.parse(savedInputs) : {};
+ 
   savedInputs[e.target.name] = e.target.value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(savedInputs));
 }
