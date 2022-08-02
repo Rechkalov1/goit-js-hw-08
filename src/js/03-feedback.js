@@ -1,40 +1,33 @@
-import throttle from 'lodash.throttle';
-
-const STORAGE_KEY = 'feedback-form-state';
+import Throttle from 'lodash.throttle';
 
 const form = document.querySelector('.feedback-form');
 
-form.addEventListener('submit', onFormSubmit);
-form.addEventListener('input', throttle(onFormInput, 500));
+form.addEventListener('input', Throttle(onForm, 500));
+form.addEventListener('submit', onSubmitButton);
 
-getStorageInputs();
+const feedbackForm = {};
 
-function onFormSubmit(e) {
-  e.preventDefault();
-  /*Для Вывода обьекта в консоль */
-  const formData = new FormData(form);
-  const userData = {};
-  formData.forEach((value, name) => userData[name] = value);
-  console.log(userData);
-  /*Проверка на заполнение всех полей */
-  const { email, message } = e.target.elements;
-  if (email.value === "" || message.value === "") {
-   return
-  }
-   e.currentTarget.reset();
-  localStorage.removeItem(STORAGE_KEY);
-}
-function onFormInput(e) {
- 
-  savedInputs[e.target.name] = e.target.value;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedInputs));
-}
-function getStorageInputs() {
-  let savedData = localStorage.getItem(STORAGE_KEY);
-  if (savedData) {
-    savedData = JSON.parse(savedData);
-    Object.entries(savedData).forEach(([name, value]) => {
-      form.elements[name].value = value;
-    });
-  }
-}
+function onForm(event) {
+    const { name, value } = event.target;
+    feedbackForm[name] = value;
+    localStorage.setItem('feedback-form-state', JSON.stringify(feedbackForm));
+};
+
+function onSubmitButton(event) {
+    event.preventDefault();
+    console.log(JSON.parse(localStorage.getItem('feedback-form-state')));
+    form.reset();
+    localStorage.removeItem('feedback-form-state');
+    
+};
+
+function dataFromLocalStorage() {
+    const dataLocalStorage = JSON.parse(localStorage.getItem('feedback-form-state'));
+    
+     if (dataLocalStorage) {
+        form.elements.email.value = dataLocalStorage.email;
+        form.elements.message.value = dataLocalStorage.message;
+    };
+
+};
+dataFromLocalStorage();
