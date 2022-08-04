@@ -7,13 +7,10 @@ form.addEventListener('submit', onSubmitButton);
 
 dataFromLocalStorage();
 let feedbackForm = {};
-function onForm() {
+function onForm(event) {
    
-    feedbackForm={
-        email: form.elements.email.value,
-        message: form.elements.message.value,
-    }
-   
+    const { name, value } = event.target;
+    feedbackForm[name] = value;
     localStorage.setItem('feedback-form-state', JSON.stringify(feedbackForm));
 };
 
@@ -28,8 +25,9 @@ function onSubmitButton(event) {
 function dataFromLocalStorage() {
     const dataLocalStorage = JSON.parse(localStorage.getItem('feedback-form-state'));
       if (dataLocalStorage) {
-        form.elements.email.value = dataLocalStorage.email;
-        form.elements.message.value = dataLocalStorage.message;
+          Object.entries(dataLocalStorage).forEach(([name,value]) =>{ 
+            form.elements[name].value = value;})
+       
     };
 
 };
